@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 
-function MicroFrontend({ name, host, history }) {
+function MicroFrontend({ name, host }) {
   useEffect(() => {
     const scriptId = `micro-frontend-script-${name}`;
 
     const renderMicroFrontend = () => {
-      window[`render${name}`](`${name}-container`, history);
+      window[`render${name}`](`${name}-container`);
     };
 
     if (document.getElementById(scriptId)) {

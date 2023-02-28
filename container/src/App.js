@@ -1,12 +1,13 @@
 import React from 'react';
-import { createBrowserHistory } from 'history';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  redirect,
+} from 'react-router-dom';
 
 import './App.css';
 import MicroFrontend from './Components/MicroFrontend';
 import ErrorBoundary from './Components/ErrorBoundary';
-
-const defaultHistory = createBrowserHistory();
 
 const HOSTS = {
   headerHost: 'http://localhost:3001',
@@ -14,44 +15,35 @@ const HOSTS = {
   footerHost: 'http://localhost:3003',
 };
 
-function Header({ history }) {
+function Header() {
   return (
     <ErrorBoundary>
-      <MicroFrontend history={history} host={HOSTS.headerHost} name="Header" />
+      <MicroFrontend host={HOSTS.headerHost} name="Header" />
     </ErrorBoundary>
   );
 }
 
-function Footer({ history }) {
+function Footer() {
   return (
     <ErrorBoundary>
-      <MicroFrontend history={history} host={HOSTS.footerHost} name="Footer" />
+      <MicroFrontend host={HOSTS.footerHost} name="Footer" />
     </ErrorBoundary>
   );
 }
 
-function Blogs({ history }) {
+function Blogs() {
   return (
     <ErrorBoundary>
-      <MicroFrontend history={history} host={HOSTS.blogHost} name="Blogs" />
+      <MicroFrontend host={HOSTS.blogHost} name="Blogs" />
     </ErrorBoundary>
   );
 }
 
-function BlogDetail({ history }) {
-  return (
-    <ErrorBoundary>
-      <MicroFrontend history={history} host={HOSTS.blogHost} name="Blogs" />
-    </ErrorBoundary>
-  );
-}
-
-function Home({ history }) {
-  console.log(history);
+function Home() {
   return (
     <div className="container">
-      <Header history={history} />
-      <Blogs history={history} />
+      <Header />
+      <Blogs />
       <Footer />
     </div>
   );
@@ -60,11 +52,29 @@ function Home({ history }) {
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home history={defaultHistory} />,
+    element: <Home />,
   },
   {
-    path: '/blogdetail/:blogid',
-    element: <BlogDetail history={defaultHistory} />,
+    path: '/blogs',
+    element: (
+      <>
+        <Header />
+        <Blogs />
+        <Footer />
+      </>
+    ),
+  },
+  {
+    path: '/blogdetail/*',
+    loader: () => {
+      return redirect('/blogs');
+    },
+  },
+  {
+    path: '*',
+    loader: () => {
+      return redirect('/');
+    },
   },
 ]);
 

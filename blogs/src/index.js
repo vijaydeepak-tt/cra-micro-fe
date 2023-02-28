@@ -4,17 +4,20 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+let root;
 window.renderBlogs = (containerId, history) => {
-  const root = ReactDOM.createRoot(document.getElementById(containerId));
+  root = ReactDOM.createRoot(document.getElementById(containerId));
   root.render(<App history={history} />);
 };
 
 window.unmountBlogs = (containerId) => {
-  ReactDOM.unmountComponentAtNode(document.getElementById(containerId));
+  if (document.getElementById(containerId) && root) {
+    root.unmount();
+  }
 };
 
 if (!document.getElementById('Blogs-container')) {
-  const root = ReactDOM.createRoot(document.getElementById('root'));
+  root = ReactDOM.createRoot(document.getElementById('root'));
   root.render(<App />);
 }
 
